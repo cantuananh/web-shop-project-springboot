@@ -91,7 +91,7 @@
     </div>
     <h1 class="text-center">Create user</h1>
     <div>
-        <form th:action="@{/users/save}" method="post" th:object="${user}">
+        <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)">
             <div class="mb-3 mt-3">
                 <label for="email" class="form-label">Email:</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" required
@@ -125,7 +125,6 @@
                     </th:block>
                 </div>
             </div>
-
             <div class="form-check mb-3">
                 <label class="form-check-label">Enabled: </label>
                 <input class="form-check-input ml-5" type="checkbox" name="enabled" th:field="*{enabled}">
@@ -138,6 +137,23 @@
         </form>
     </div>
 </div>
+<div class="modal fade text-center" id="userWarningModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Warning</h4>
+                <button type="button" class="btn-close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <span id="modalBody"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
@@ -148,5 +164,33 @@
             window.location = "[[@{/users}]]";
         })
     });
+
+    let checkEmailUnique = (form) => {
+        let url = "[[@{/users/check_email}]]";
+
+        let userEmail = $("#email").val();
+        let csrfValue = $("input[name = '_csrf']").val();
+        let params = {email: userEmail, _csrf: csrfValue}
+
+        $.post(url, params, function (res) {
+            if (res == "OK") {
+                form.submit();
+            } else if (res == "Duplicated") {
+                showModal("Warning", "This email existed! You can try another email!")
+            } else {
+                showModal("Error", "Unknown response from server!")
+            }
+        }).fail(function () {
+            showModal("Error", "Could not connect to server!")
+        })
+
+        return false;
+    }
+
+    function showModal(title, message) {
+        $("#modalTitle").text(title);
+        $("#modalBody").text(message);
+        $("#userWarningModal").modal();
+    }
 </script>
 </html>
