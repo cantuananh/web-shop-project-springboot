@@ -9,6 +9,11 @@
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js//bootstrap.min.js}"></script>
 </head>
+<style>
+    .footer {
+        text-align: center;
+    }
+</style>
 <body>
 <div class="container-fluid">
     <div>
@@ -79,7 +84,12 @@
             </div>
         </nav>
     </div>
-    <h1 class="">Manager user</h1>
+    <h1 class="text-center">Manager user</h1>
+    <div class="text-center">
+        <a th:href="@{/users/new}">
+            <button class="btn btn-success btn-create-new-user mb-3">Create user</button>
+        </a>
+    </div>
     <div>
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">
@@ -90,7 +100,7 @@
             <th>Role</th>
             <th>Enabled</th>
             </thead>
-            <tbody class="text-center">
+            <tbody class="text-center ">
             <tr th:each="user : ${listUsers}">
                 <td>[[${user.id}]]</td>
                 <td></td>
@@ -108,7 +118,7 @@
         </table>
     </div>
 </div>
-<div>
+<div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
 </body>
