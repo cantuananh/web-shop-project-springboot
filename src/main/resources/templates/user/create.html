@@ -133,6 +133,7 @@
             <div class="text-right">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
+                <button type="button" class="btn btn-secondary" id="buttonCancelCreateUser">Cancel</button>
             </div>
         </form>
     </div>
@@ -141,4 +142,11 @@
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
 </body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#buttonCancelCreateUser").on('click', function () {
+            window.location = "[[@{/users}]]";
+        })
+    });
+</script>
 </html>
