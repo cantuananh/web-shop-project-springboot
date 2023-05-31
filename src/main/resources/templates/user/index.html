@@ -80,6 +80,33 @@
         </nav>
     </div>
     <h1 class="">Manager user</h1>
+    <div>
+        <table class="table table-responsive-lg table-hover table-bordered table-striped">
+            <thead class="thead-dark text-center">
+            <th>User ID</th>
+            <th>Photos</th>
+            <th>First name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            </thead>
+            <tbody class="text-center">
+            <tr th:each="user : ${listUsers}">
+                <td>[[${user.id}]]</td>
+                <td></td>
+                <td>[[${user.firstName}]]</td>
+                <td>[[${user.lastName}]]</td>
+                <td>
+                    <p th:each="role : ${user.roles}">
+                        <span>[[${role.name}]]</span>
+                    </p>
+                </td>
+                <td>[[${user.enabled}]]</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
 </div>
 <div>
     <p>Shopme control panel- Copyright &copy; Shopme</p>
