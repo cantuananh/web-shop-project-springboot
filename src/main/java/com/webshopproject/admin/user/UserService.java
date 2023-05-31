@@ -28,4 +28,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public boolean isEmailUnique(String email) {
+        User userByEmail = userRepository.getUserByEmail(email);
+
+        return userByEmail == null;
+    }
+
 }
