@@ -120,12 +120,12 @@
                     <a href="" th:if="${user.enabled == false}" class="fas fa-check-circle icon-dark fa-2x"></a>
                 </td>
                 <td class="action">
-                    <a th:href="@{'/users/edit/' + ${user.id}}">
-                        <button class="btn btn-info rounded-circle btn-edit-user" title="Edit user">
+                    <a href="">
+                        <button class="btn btn-info rounded-circle btn-edit-user">
                             <i class="fa fa-pen"></i>
                         </button>
                     </a>
-                    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="">
+                    <a href="">
                         <button class="btn btn-danger rounded-circle">
                             <i class="fa fa-trash fa-beat"></i>
                         </button>
@@ -140,7 +140,7 @@
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
 </body>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
         var message = $(".message");
 
