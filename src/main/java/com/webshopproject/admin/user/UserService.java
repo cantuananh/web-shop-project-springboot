@@ -2,6 +2,7 @@ package com.webshopproject.admin.user;
 
 import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -76,6 +78,10 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepository.updateEnabledStatus(id, enabled);
     }
 
 }
