@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
     <!--    <meta name="viewport" content="width:device-width, initial-scale=1.0, minimum-scale=1.0">-->
 
-    <title>Shopme admin</title>
+    <title>[[${pageTitle}]]</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js//bootstrap.min.js}"></script>
@@ -89,7 +89,7 @@
             </div>
         </nav>
     </div>
-    <h1 class="text-center">Create user</h1>
+    <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
         <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)">
             <div class="mb-3 mt-3">
