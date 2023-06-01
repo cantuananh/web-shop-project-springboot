@@ -6,19 +6,12 @@
 
     <title>Shopme admin</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/user_index_style.css}">
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js//bootstrap.min.js}"></script>
 </head>
-<style>
-    .footer {
-        text-align: center;
-    }
-
-    table {
-        max-width: 60%;
-        margin: 0 auto;
-    }
-</style>
 <body>
 <div class="container-fluid">
     <div>
@@ -108,12 +101,13 @@
             <th>Last Name</th>
             <th>Role</th>
             <th>Enabled</th>
+            <th>Action</th>
             </thead>
             <tbody class="text-center ">
             <tr th:each="user : ${listUsers}">
                 <td>[[${user.id}]]</td>
                 <td>[[${user.email}]]</td>
-                <td></td>
+                <td><i class="fa fa-portrait fa-3x icon-dark"></i></td>
                 <td>[[${user.firstName}]]</td>
                 <td>[[${user.lastName}]]</td>
                 <td>
@@ -121,7 +115,22 @@
                         <span>[[${role.name}]]</span>
                     </p>
                 </td>
-                <td>[[${user.enabled}]]</td>
+                <td>
+                    <a href="" th:if="${user.enabled == true}" class="fas fa-check-circle icon-green fa-2x"></a>
+                    <a href="" th:if="${user.enabled == false}" class="fas fa-check-circle icon-dark fa-2x"></a>
+                </td>
+                <td class="action">
+                    <a href="">
+                        <button class="btn btn-info rounded-circle btn-edit-user">
+                            <i class="fa fa-pen"></i>
+                        </button>
+                    </a>
+                    <a href="">
+                        <button class="btn btn-danger rounded-circle">
+                            <i class="fa fa-trash fa-beat"></i>
+                        </button>
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -134,9 +143,11 @@
 <script>
     $(document).ready(function () {
         var message = $(".message");
+
         function hideMessage() {
             message.hide();
         }
+
         setTimeout(hideMessage, 2000);
     });
 </script>
