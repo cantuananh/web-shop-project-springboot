@@ -125,7 +125,7 @@
                             <i class="fa fa-pen"></i>
                         </button>
                     </a>
-                    <a href="">
+                    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="">
                         <button class="btn btn-danger rounded-circle">
                             <i class="fa fa-trash fa-beat"></i>
                         </button>
@@ -140,7 +140,7 @@
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
 </body>
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         var message = $(".message");
 

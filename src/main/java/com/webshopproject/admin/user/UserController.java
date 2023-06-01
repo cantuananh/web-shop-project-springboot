@@ -7,6 +7,7 @@ import org.springframework.boot.Banner;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,9 +58,21 @@ public class UserController {
             model.addAttribute("pageTitle", "Edit user (ID: " + id + ")");
             model.addAttribute("listRoles", listRoles);
             return "user/create";
-        } catch (UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             redirectAttributes.addFlashAttribute("message", "Can not found user with id: " + id);
             return "redirect:/users";
         }
+    }
+
+    @GetMapping("/users/delete/{id}")
+    public String deleteUserWith(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserWith(id);
+            redirectAttributes.addFlashAttribute("message", "Delete user successfully");
+        } catch (UserNotFoundException exception) {
+            redirectAttributes.addFlashAttribute("message", "Could not found user with ID: " + id);
+        }
+
+        return "redirect:/users";
     }
 }
