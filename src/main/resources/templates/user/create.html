@@ -92,6 +92,7 @@
     <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
         <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)">
+            <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
                 <label for="email" class="form-label">Email:</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" required
@@ -99,9 +100,13 @@
                        placeholder="example@gmail.com..." name="email">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password:</label>
-                <input type="password" class="form-control" minlength="8" maxlength="20" id="password"
+                <label class="form-label">Password:</label>
+                <input th:if="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="20" required
                        th:field="*{password}" placeholder="Enter password..." name="password">
+                <input th:if="${user.id != null}" type="password" class="form-control" minlength="8" maxlength="20"
+                       th:field="*{password}" placeholder="Enter password..." name="password">
+
+
             </div>
             <div class="mb-3">
                 <label for="firstName" class="form-label">First name: </label>
@@ -170,7 +175,8 @@
 
         let userEmail = $("#email").val();
         let csrfValue = $("input[name = '_csrf']").val();
-        let params = {email: userEmail, _csrf: csrfValue}
+        let userId = $("#id").val();
+        let params = {id: userId, email: userEmail, _csrf: csrfValue}
 
         $.post(url, params, function (res) {
             if (res == "OK") {

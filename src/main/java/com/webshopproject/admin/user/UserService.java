@@ -26,13 +26,38 @@ public class UserService {
     }
 
     public void save(User user) {
+        boolean isUpdatingUser = (user.getId() != null);
+
+        if (isUpdatingUser) {
+            User existingUser = userRepository.findById(user.getId()).get();
+
+            if (user.getPassword().isEmpty()) {
+                user.setPassword(existingUser.getPassword());
+            }
+        }
         userRepository.save(user);
     }
 
-    public boolean isEmailUnique(String email) {
+    public boolean isEmailUnique(Integer id, String email) {
         User userByEmail = userRepository.getUserByEmail(email);
 
-        return userByEmail == null;
+        if (userByEmail == null) {
+            return true;
+        }
+
+        boolean isCreatingNew = (id == null);
+
+        if (isCreatingNew) {
+            if (userByEmail != null) {
+                return false;
+            } else {
+                if (userByEmail.getId() != id) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public User getUserWith(Integer id) throws UserNotFoundException {

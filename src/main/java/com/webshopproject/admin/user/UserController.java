@@ -43,7 +43,7 @@ public class UserController {
     public String saveUser(User user, RedirectAttributes redirectAttributes) {
         System.out.println(user);
         userService.save(user);
-        redirectAttributes.addFlashAttribute("message", "Create user successfully");
+        redirectAttributes.addFlashAttribute("message", "The user has been saved successfully");
 
         return "redirect:/users";
     }
