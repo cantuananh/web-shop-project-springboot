@@ -2,12 +2,14 @@ package com.webshopproject.admin.user;
 
 import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -32,6 +34,10 @@ public class UserService {
         User userByEmail = userRepository.getUserByEmail(email);
 
         return userByEmail == null;
+    }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepository.updateEnabledStatus(id, enabled);
     }
 
 }
