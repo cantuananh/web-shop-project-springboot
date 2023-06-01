@@ -6,6 +6,9 @@
 
     <title>Shopme admin</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/user_index_style.css}">
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js//bootstrap.min.js}"></script>
 </head>
@@ -79,21 +82,32 @@
             </div>
         </nav>
     </div>
-    <h1 class="">Manager user</h1>
+    <h1 class="text-center">Manager user</h1>
+    <div class="text-center">
+        <a th:href="@{/users/new}">
+            <button class="btn btn-success btn-create-new-user mb-3">Create user</button>
+        </a>
+    </div>
+    <div th:if="${message != null}" class="alert-success alert text-center message">
+        [[${message}]]
+    </div>
     <div>
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">
             <th>User ID</th>
+            <th>Email</th>
             <th>Photos</th>
             <th>First name</th>
             <th>Last Name</th>
             <th>Role</th>
             <th>Enabled</th>
+            <th>Action</th>
             </thead>
-            <tbody class="text-center">
+            <tbody class="text-center ">
             <tr th:each="user : ${listUsers}">
                 <td>[[${user.id}]]</td>
-                <td></td>
+                <td>[[${user.email}]]</td>
+                <td><i class="fa fa-portrait fa-3x icon-dark"></i></td>
                 <td>[[${user.firstName}]]</td>
                 <td>[[${user.lastName}]]</td>
                 <td>
@@ -101,15 +115,40 @@
                         <span>[[${role.name}]]</span>
                     </p>
                 </td>
-                <td>[[${user.enabled}]]</td>
+                <td>
+                    <a href="" th:if="${user.enabled == true}" class="fas fa-check-circle icon-green fa-2x"></a>
+                    <a href="" th:if="${user.enabled == false}" class="fas fa-check-circle icon-dark fa-2x"></a>
+                </td>
+                <td class="action">
+                    <a href="">
+                        <button class="btn btn-info rounded-circle btn-edit-user">
+                            <i class="fa fa-pen"></i>
+                        </button>
+                    </a>
+                    <a href="">
+                        <button class="btn btn-danger rounded-circle">
+                            <i class="fa fa-trash fa-beat"></i>
+                        </button>
+                    </a>
+                </td>
             </tr>
-
             </tbody>
         </table>
     </div>
 </div>
-<div>
+<div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
 </body>
+<script>
+    $(document).ready(function () {
+        var message = $(".message");
+
+        function hideMessage() {
+            message.hide();
+        }
+
+        setTimeout(hideMessage, 2000);
+    });
+</script>
 </html>

@@ -1,0 +1,22 @@
+.footer {
+    text-align: center;
+}
+
+table {
+    max-width: 60%;
+    margin: 0 auto;
+    border: none;
+}
+
+.btn-edit-user {
+    margin-right: 5px;
+}
+
+.action {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-bordered td {
+    border: none;
+}
