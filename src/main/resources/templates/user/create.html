@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
     <!--    <meta name="viewport" content="width:device-width, initial-scale=1.0, minimum-scale=1.0">-->
 
-    <title>[[${pageTitle}]]</title>
+    <title>Shopme admin</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js//bootstrap.min.js}"></script>
@@ -89,10 +89,9 @@
             </div>
         </nav>
     </div>
-    <h1 class="text-center">[[${pageTitle}]]</h1>
+    <h1 class="text-center">Create user</h1>
     <div>
         <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)">
-            <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
                 <label for="email" class="form-label">Email:</label>
                 <input type="email" class="form-control" id="email" th:field="*{email}" required
@@ -100,13 +99,9 @@
                        placeholder="example@gmail.com..." name="email">
             </div>
             <div class="mb-3">
-                <label class="form-label">Password:</label>
-                <input th:if="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="20" required
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" minlength="8" maxlength="20" id="password"
                        th:field="*{password}" placeholder="Enter password..." name="password">
-                <input th:if="${user.id != null}" type="password" class="form-control" minlength="8" maxlength="20"
-                       th:field="*{password}" placeholder="Enter password..." name="password">
-
-
             </div>
             <div class="mb-3">
                 <label for="firstName" class="form-label">First name: </label>
@@ -174,8 +169,7 @@
 
         let userEmail = $("#email").val();
         let csrfValue = $("input[name = '_csrf']").val();
-        let userId = $("#id").val();
-        let params = {id: userId, email: userEmail, _csrf: csrfValue}
+        let params = {email: userEmail, _csrf: csrfValue}
 
         $.post(url, params, function (res) {
             if (res == "OK") {

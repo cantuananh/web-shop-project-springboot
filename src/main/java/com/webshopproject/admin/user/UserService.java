@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -28,19 +27,10 @@ public class UserService {
     }
 
     public void save(User user) {
-        boolean isUpdatingUser = (user.getId() != null);
-
-        if (isUpdatingUser) {
-            User existingUser = userRepository.findById(user.getId()).get();
-
-            if (user.getPassword().isEmpty()) {
-                user.setPassword(existingUser.getPassword());
-            }
-        }
         userRepository.save(user);
     }
 
-    public boolean isEmailUnique(Integer id, String email) {
+    public boolean isEmailUnique(String email) {
         User userByEmail = userRepository.getUserByEmail(email);
 
         if (id == null) {
