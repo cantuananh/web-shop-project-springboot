@@ -5,6 +5,7 @@ import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +24,19 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public String getListAll(Model model) {
-        List<User> listUsers = userService.listAll();
+    public String listFirstPage(Model model) {
+        return listByPage(1, model);
+    }
+
+    @GetMapping("/users/page/{pageNumber}")
+    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model) {
+        Page<User> page = userService.listByPage(pageNumber);
+        List<User> listUsers = page.getContent();
+
+        System.out.println("Page number: " + pageNumber);
+        System.out.println("Total element: " + page.getTotalElements());
+        System.out.println("Total page: " + page.getTotalPages());
+
         model.addAttribute("listUsers", listUsers);
 
         return "user/index";
