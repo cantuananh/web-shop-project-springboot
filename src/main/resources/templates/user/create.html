@@ -91,7 +91,7 @@
     </div>
     <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
-        <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)">
+        <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
                 <label for="email" class="form-label">Email:</label>
@@ -138,8 +138,7 @@
             <div class="form-group row" style="margin-bottom: 5.5rem">
                 <label class="col-sm-4 col-form-label">Photos: </label>
                 <div class="col-sm-8">
-                    <input type="file" id="fileImage" style="margin-left: -6rem" name="image" accept="image/jpeg, image/png"
-                           th:field="*{photos}">
+                    <input type="file" id="fileImage" style="margin-left: -6rem" name="image" accept="image/jpeg, image/png">
                     <img id="thumbnail" style="height: 55px" alt="image error" th:src="@{/images/default_user.png}">
                 </div>
             </div>
