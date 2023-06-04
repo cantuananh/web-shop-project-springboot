@@ -141,6 +141,34 @@
         </table>
     </div>
 </div>
+<div class="text-center mb-1" th:if="${totalItems > 0}">
+    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+</div>
+<div class="text-center mb-1" th:unless="${totalItems > 0}">
+    <span>No users found!</span>
+</div>
+<div>
+    <nav class="pagination justify-content-center">
+        <ul class="pagination">
+            <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{/users/page/1}">First</a>
+            </li>
+            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" th:href="@{'/users/page/' + ${currentPage - 1}}">Previous</a>
+            </li>
+            <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+                th:each="i : ${#numbers.sequence(1, totalPage)}">
+                <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a>
+            </li>
+            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" th:href="@{'/users/page/' + ${currentPage + 1}}">Next</a>
+            </li>
+            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
+                <a class="page-link" th:href="@{'/users/page/' + ${totalPage}}">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
