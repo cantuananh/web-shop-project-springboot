@@ -26,8 +26,8 @@ public class UserService {
         return (List<Role>) roleRepository.findAll();
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     public boolean isEmailUnique(String email) {
