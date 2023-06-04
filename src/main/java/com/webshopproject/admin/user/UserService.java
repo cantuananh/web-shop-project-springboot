@@ -43,23 +43,18 @@ public class UserService {
     public boolean isEmailUnique(Integer id, String email) {
         User userByEmail = userRepository.getUserByEmail(email);
 
-        if (userByEmail == null) {
+        if (id == null) {
+            if (userByEmail != null) {
+                return false;
+            }
             return true;
         }
 
-        boolean isCreatingNew = (id == null);
-
-        if (isCreatingNew) {
-            if (userByEmail != null) {
-                return false;
-            } else {
-                if (userByEmail.getId() != id) {
-                    return false;
-                }
-            }
+        if (userByEmail != null && userByEmail.getId() == id) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public User getUserWith(Integer id) throws UserNotFoundException {
