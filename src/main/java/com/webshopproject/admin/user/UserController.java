@@ -39,6 +39,8 @@ public class UserController {
         }
 
         model.addAttribute("startCount", startCount);
+        model.addAttribute("totalPage", page.getTotalPages());
+        model.addAttribute("currentPage", pageNumber);
         model.addAttribute("endCount", endCount);
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listUsers", listUsers);
