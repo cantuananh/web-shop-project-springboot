@@ -58,6 +58,14 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        userService.deleteUser(id);
+        redirectAttributes.addFlashAttribute("message", "Delete user successfully!");
+
+        return "redirect:/users";
+    }
+
     @GetMapping("/users/{id}/enabled/{status}")
     public String updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         userService.updateUserEnabledStatus(id, enabled);

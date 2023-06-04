@@ -40,4 +40,8 @@ public class UserService {
         userRepository.updateEnabledStatus(id, enabled);
     }
 
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
+    }
+
 }
