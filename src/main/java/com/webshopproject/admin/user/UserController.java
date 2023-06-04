@@ -4,9 +4,7 @@ import com.webshopproject.admin.FileUploadUtil;
 import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -15,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 
 @Controller
@@ -32,11 +29,18 @@ public class UserController {
     public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model) {
         Page<User> page = userService.listByPage(pageNumber);
         List<User> listUsers = page.getContent();
+        long startCount = (pageNumber - 1) * UserService.USER_PER_PAGE + 1;
+        long endCount = startCount * UserService.USER_PER_PAGE;
+        if (startCount >= page.getTotalElements()) {
+            startCount = page.getTotalElements();
+        }
+        if (endCount > page.getTotalElements()) {
+            endCount = page.getTotalElements();
+        }
 
-        System.out.println("Page number: " + pageNumber);
-        System.out.println("Total element: " + page.getTotalElements());
-        System.out.println("Total page: " + page.getTotalPages());
-
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listUsers", listUsers);
 
         return "user/index";
