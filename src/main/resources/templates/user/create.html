@@ -101,7 +101,8 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Password:</label>
-                <input th:if="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="20" required
+                <input th:if="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="20"
+                       required
                        th:field="*{password}" placeholder="Enter password..." name="password">
                 <input th:if="${user.id != null}" type="password" class="form-control" minlength="8" maxlength="20"
                        th:field="*{password}" placeholder="Enter password..." name="password">
@@ -133,6 +134,14 @@
             <div class="form-check mb-3">
                 <label class="form-check-label">Enabled: </label>
                 <input class="form-check-input ml-5" type="checkbox" name="enabled" th:field="*{enabled}">
+            </div>
+            <div class="form-group row" style="margin-bottom: 5.5rem">
+                <label class="col-sm-4 col-form-label">Photos: </label>
+                <div class="col-sm-8">
+                    <input type="file" id="fileImage" style="margin-left: -6rem" name="image" accept="image/jpeg, image/png"
+                           th:field="*{photos}">
+                    <img id="thumbnail" style="height: 55px" alt="image error" th:src="@{/images/default_user.png}">
+                </div>
             </div>
             <div class="text-right">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -167,7 +176,20 @@
         $("#buttonCancelCreateUser").on('click', function () {
             window.location = "[[@{/users}]]";
         })
+
+        $("#fileImage").change(function () {
+            showImageThumbnail(this);
+        });
     });
+
+    let showImageThumbnail = (fileInput) => {
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#thumbnail").attr("src", e.target.result);
+        }
+        reader.readAsDataURL(file);
+    }
 
     let checkEmailUnique = (form) => {
         let url = "[[@{/users/check_email}]]";
