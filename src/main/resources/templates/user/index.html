@@ -109,7 +109,7 @@
                 <td>[[${user.email}]]</td>
                 <td>
                     <span th:if="${user.photos == null}" class="fa fa-portrait fa-3x icon-dark"></span>
-                    <img th:if="${user.photos != null}" th:src="@{${user.getPhotosImagePath}}">
+                    <img th:if="${user.photos != null}" style="height: 80px" th:src="@{${user.getPhotosImagePath}}">
                 </td>
                 <td>[[${user.firstName}]]</td>
                 <td>[[${user.lastName}]]</td>
@@ -125,12 +125,12 @@
                        class="fas fa-check-circle icon-dark fa-2x" title="Enabled this user"></a>
                 </td>
                 <td class="action">
-                    <a href="">
-                        <button class="btn btn-info rounded-circle btn-edit-user">
+                    <a th:href="@{'/users/edit/' + ${user.id}}">
+                        <button class="btn btn-info rounded-circle btn-edit-user" title="Edit user">
                             <i class="fa fa-pen"></i>
                         </button>
                     </a>
-                    <a href="">
+                    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="Delete user">
                         <button class="btn btn-danger rounded-circle">
                             <i class="fa fa-trash fa-beat"></i>
                         </button>

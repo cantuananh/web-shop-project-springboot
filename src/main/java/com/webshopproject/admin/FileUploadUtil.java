@@ -24,4 +24,18 @@ public class FileUploadUtil {
             throw new IOException("Could not save file: " + fileName, e);
         }
     }
+
+    public static void cleanDir(String directory) throws IOException {
+        Path dirPath = Paths.get(directory);
+
+        Files.list(dirPath).forEach(file -> {
+            if (!Files.isDirectory(file)) {
+                try {
+                    Files.delete(file);
+                } catch (IOException e) {
+                    System.out.println("Could not delete file: " + e);
+                }
+            }
+        });
+    }
 }

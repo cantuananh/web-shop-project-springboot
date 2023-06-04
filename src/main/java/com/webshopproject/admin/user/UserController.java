@@ -50,6 +50,7 @@ public class UserController {
             user.setPhotos(fileName);
             User saveUser = userService.save(user);
             String uploadDir = "user-photos/" + saveUser.getId() ;
+            FileUploadUtil.cleanDir(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         }
 
@@ -58,10 +59,29 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            User user = userService.getUserWith(id);
+            List<Role> listRoles = userService.listRoles();
+            model.addAttribute("user", user);
+            model.addAttribute("pageTitle", "Edit user (ID: " + id + ")");
+            model.addAttribute("listRoles", listRoles);
+            return "user/create";
+        } catch (UserNotFoundException e) {
+            redirectAttributes.addFlashAttribute("message", "Can not found user with id: " + id);
+            return "redirect:/users";
+        }
+    }
+
     @GetMapping("/users/delete/{id}")
-    public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-        userService.deleteUser(id);
-        redirectAttributes.addFlashAttribute("message", "Delete user successfully!");
+    public String deleteUserWith(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserWith(id);
+            redirectAttributes.addFlashAttribute("message", "Delete user successfully");
+        } catch (UserNotFoundException exception) {
+            redirectAttributes.addFlashAttribute("message", "Could not found user with ID: " + id);
+        }
 
         return "redirect:/users";
     }
