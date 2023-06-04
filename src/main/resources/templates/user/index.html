@@ -107,7 +107,10 @@
             <tr th:each="user : ${listUsers}">
                 <td>[[${user.id}]]</td>
                 <td>[[${user.email}]]</td>
-                <td><i class="fa fa-portrait fa-3x icon-dark"></i></td>
+                <td>
+                    <span th:if="${user.photos == null}" class="fa fa-portrait fa-3x icon-dark"></span>
+                    <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" style="width: 100px">
+                </td>
                 <td>[[${user.firstName}]]</td>
                 <td>[[${user.lastName}]]</td>
                 <td>
