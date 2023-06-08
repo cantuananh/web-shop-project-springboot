@@ -5,6 +5,7 @@ import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -22,12 +23,18 @@ public class UserController {
 
     @GetMapping("/users")
     public String listFirstPage(Model model) {
-        return listByPage(1, model);
+        return listByPage(1, model, "firstName", "asc");
     }
 
     @GetMapping("/users/page/{pageNumber}")
-    public String listByPage(@PathVariable(name = "pageNumber") int pageNumber, Model model) {
-        Page<User> page = userService.listByPage(pageNumber);
+    public String listByPage(
+            @PathVariable(name = "pageNumber") int pageNumber,
+            Model model,
+            @Param("sortField") String sortField,
+            @Param("sortDirectory") String sortDirectory) {
+        System.out.println("Sort Field: " + sortField);
+        System.out.println("Sort directory: " + sortDirectory);
+        Page<User> page = userService.listByPage(pageNumber, sortField, sortDirectory);
         List<User> listUsers = page.getContent();
         long startCount = (pageNumber - 1) * UserService.USER_PER_PAGE + 1;
         long endCount = startCount * UserService.USER_PER_PAGE;
@@ -38,12 +45,17 @@ public class UserController {
             endCount = page.getTotalElements();
         }
 
+        String revertSortDir = sortDirectory.equals("asc") ? "desc" : "asc";
+
         model.addAttribute("startCount", startCount);
         model.addAttribute("totalPage", page.getTotalPages());
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("endCount", endCount);
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listUsers", listUsers);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDirectory", sortDirectory);
+        model.addAttribute("revertSortDir", revertSortDir);
 
         return "user/index";
     }
