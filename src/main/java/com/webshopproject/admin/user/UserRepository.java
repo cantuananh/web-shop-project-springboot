@@ -14,7 +14,7 @@ public interface UserRepository extends CustomPagingAndSortingRepository<User, I
     @Query("select user from User user where user.email = :email")
     public User getUserByEmail(@Param("email") String email);
 
-    @Query("select user from User user where user.firstName like %?1% or user.lastName like %?1%")
+    @Query("select user from User user where user.firstName like %?1% or user.lastName like %?1%" + "or user.email like %?1% ")
     public Page<User> findAll(String keyword, Pageable pageable);
 
     public Long countById(Integer id);
