@@ -15,5 +15,9 @@
     <span th:if="${sortField == fieldName}"
           th:class="${sortDirectory == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 </th>
+
+<a th:fragment="column_link_paginate(pageNumber, label)"
+   class="page-link"
+   th:href="@{'/users/page/' + ${pageNumber} + '?sortField=' + ${sortField} + '&sortDirectory=' + ${sortDirectory} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
 </body>
 </html>
