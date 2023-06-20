@@ -30,7 +30,7 @@ public class CategoryService {
                 Set<Category> children = category.getChildren();
 
                 for (Category subCategory : children) {
-                    String name = "--" + subCategory.getName();
+                    String name = "-" + subCategory.getName();
                     categoriesUsedInForm.add(new Category(name));
                     listChildren(categoriesUsedInForm, subCategory, 1);
                 }
@@ -46,7 +46,7 @@ public class CategoryService {
         for (Category subCategory : children) {
             String name = "";
             for (int i = 0; i < newSubLevel; i++) {
-                name += "--";
+                name += "-";
             }
             name += subCategory.getName();
             categoriesUsedInForm.add(new Category(name));
