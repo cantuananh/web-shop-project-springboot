@@ -102,6 +102,11 @@ public class Category {
         this.children = children;
     }
 
+    @Transient
+    public String getImagePath() {
+        return "/category-images/" + this.id + "/" + this.image;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

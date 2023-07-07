@@ -105,18 +105,17 @@
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">
             <th>ID</th>
-            <th>Category image
+            <th>Category image</th>
             <th>Category name</th>
-            <th>Alias
-            <th>Enabled
+            <th>Alias</th>
+            <th>Enabled</th>
             <th>Action</th>
             </thead>
             <tbody class="text-center">
             <tr th:each="category : ${listCategory}">
                 <td>[[${category.id}]]</td>
                 <td>
-                    <span th:if="${category.image == null}" class="fa fa-portrait fa-3x icon-dark"></span>
-                    <img th:if="${category.image != null}" th:src="@{${category.image}}" style="width: 100px">
+                    <img th:if="${category.image != null}" th:src="@{${category.imagePath}}" style="width: 100px">
                 </td>
                 <td class="text-left">[[${category.name}]]</td>
                 <td>[[${category.alias}]]</td>
