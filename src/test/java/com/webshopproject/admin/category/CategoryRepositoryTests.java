@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 
-import javax.swing.plaf.SpinnerUI;
 import java.util.List;
 import java.util.Set;
 
@@ -82,5 +81,13 @@ public class CategoryRepositoryTests {
 
             printChildren(subCategory, newSubLevel);
         }
+    }
+
+    @Test
+    public void testGetListRootCategories() {
+        List<Category> rootCategories = categoryRepository.findRootCategories();
+        rootCategories.forEach(category -> {
+            System.out.println(category.getName());
+        });
     }
 }
