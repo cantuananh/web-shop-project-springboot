@@ -118,7 +118,7 @@
                     <span th:if="${category.image == null}" class="fa fa-portrait fa-3x icon-dark"></span>
                     <img th:if="${category.image != null}" th:src="@{${category.image}}" style="width: 100px">
                 </td>
-                <td>[[${category.name}]]</td>
+                <td class="text-left">[[${category.name}]]</td>
                 <td>[[${category.alias}]]</td>
                 <td>
                     <a th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
