@@ -4,6 +4,10 @@ import com.webshopproject.entity.Role;
 import com.webshopproject.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class UserService {
+    public static final int USER_PER_PAGE = 5;
     @Autowired
     private UserRepository userRepository;
 
@@ -27,7 +32,7 @@ public class UserService {
         return (List<Role>) roleRepository.findAll();
     }
 
-    public void save(User user) {
+    public User save(User user) {
         boolean isUpdatingUser = (user.getId() != null);
 
         if (isUpdatingUser) {
@@ -37,7 +42,7 @@ public class UserService {
                 user.setPassword(existingUser.getPassword());
             }
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public boolean isEmailUnique(Integer id, String email) {
@@ -79,4 +84,15 @@ public class UserService {
         userRepository.updateEnabledStatus(id, enabled);
     }
 
+    public Page<User> listByPage(int pageNumber, String sortField, String sortDirectory, String keyword) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDirectory.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNumber - 1, USER_PER_PAGE, sort);
+
+        if (keyword != null) {
+            return userRepository.findAll(keyword, pageable);
+        }
+
+        return userRepository.findAll(pageable);
+    }
 }

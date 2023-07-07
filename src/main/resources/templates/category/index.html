@@ -22,7 +22,6 @@
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
                 <span class="navbar-toggler-icon"></span>
-
             </button>
             <div class="collapse navbar-collapse" id="topNavbar">
                 <ul class="navbar-nav">
@@ -83,66 +82,59 @@
             </div>
         </nav>
     </div>
-    <h1 class="text-center">Manager user</h1>
+    <h1 class="text-center">Manager category</h1>
     <div class="text-center">
-        <a th:href="@{/users/new}">
-            <button class="btn btn-success btn-create-new-user mb-3">Create user</button>
+        <a th:href="@{/categories/new}">
+            <button class="btn btn-success btn-create-new-category mb-3">Create category</button>
         </a>
     </div>
     <div th:if="${message != null}" class="alert-success alert text-center message">
         [[${message}]]
     </div>
-    <div class="justify-content-center d-flex">
-        <form th:action="@{/users/page/1}" class="form-inline">
-            <input type="hidden" name="sortField" th:value="${sortField}">
-            <input type="hidden" name="sortDirectory" th:value="${sortDirectory}">
-            Filter: <input type="search" name="keyword" th:value="${keyword}" required class="form-control m-3"
-                           placeholder="Enter name search..." style="width: 15rem">
-            <input type="submit" value="Search" class="btn btn-primary mr-3">
-            <input type="reset" value="Clear" class="btn btn-secondary" onclick="clearFilter();">
-        </form>
-    </div>
+    <!--    <div class="justify-content-center d-flex">-->
+    <!--        <form th:action="@{/users/page/1}" class="form-inline">-->
+    <!--            <input type="hidden" name="sortField" th:value="${sortField}">-->
+    <!--            <input type="hidden" name="sortDirectory" th:value="${sortDirectory}">-->
+    <!--            Filter: <input type="search" name="keyword" th:value="${keyword}" required class="form-control m-3"-->
+    <!--                           placeholder="Enter name search..." style="width: 15rem">-->
+    <!--            <input type="submit" value="Search" class="btn btn-primary mr-3">-->
+    <!--            <input type="reset" value="Clear" class="btn btn-secondary" onclick="clearFilter();">-->
+    <!--        </form>-->
+    <!--    </div>-->
     <div>
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">
-            <th th:replace="~{/user/fragments :: column_link('id', 'User ID')}">
-            </th>
-            <th th:replace="~{/user/fragments :: column_link('email', 'Email')}">
-            <th>Photos</th>
-            <th th:replace="~{/user/fragments :: column_link('firstName', 'First name')}">
-            <th th:replace="~{/user/fragments :: column_link('lastName', 'Last name')}">
-            <th>Role</th>
-            <th th:replace="~{/user/fragments :: column_link('enabled', 'Enabled')}">
+            <th>ID</th>
+            <th>Category image</th>
+            <th>Category name</th>
+            <th>Alias</th>
+            <th>Enabled</th>
             <th>Action</th>
             </thead>
             <tbody class="text-center">
-            <tr th:each="user : ${listUsers}">
-                <td>[[${user.id}]]</td>
-                <td>[[${user.email}]]</td>
+            <tr th:each="category : ${listCategory}">
+                <td>[[${category.id}]]</td>
                 <td>
-                    <span th:if="${user.photos == null}" class="fa fa-portrait fa-3x icon-dark"></span>
-                    <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}" style="width: 100px">
+                    <img th:if="${category.image != null}" th:src="@{${category.imagePath}}" style="width: 100px">
                 </td>
-                <td>[[${user.firstName}]]</td>
-                <td>[[${user.lastName}]]</td>
+                <td class="text-left">[[${category.name}]]</td>
+                <td>[[${category.alias}]]</td>
                 <td>
-                    <p th:each="role : ${user.roles}">
-                        <span>[[${role.name}]]</span>
-                    </p>
-                </td>
-                <td>
-                    <a th:href="@{'/users/' + ${user.id} + '/enabled/false'}" th:if="${user.enabled == true}"
-                       class="fas fa-check-circle icon-green fa-2x" title="Disable this user"></a>
-                    <a th:href="@{'/users/' + ${user.id} + '/enabled/true'}" th:if="${user.enabled == false}"
-                       class="fas fa-check-circle icon-dark fa-2x" title="Enabled this user"></a>
+                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
+                       th:if="${category.enabled == true}"
+                       class="fas fa-check-circle icon-green fa-2x" title="Disable this category"></a>
+                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
+                       th:if="${category.enabled == false}"
+                       class="fas fa-check-circle icon-dark fa-2x" title="Enabled this category"></a>
                 </td>
                 <td class="action">
-                    <a th:href="@{'/users/edit/' + ${user.id}}">
-                        <button class="btn btn-info rounded-circle btn-edit-user" title="Edit user">
+                    <a th:href="@{'/categories/edit/' + ${category.id}}">
+                        <button class="btn btn-info rounded-circle btn-edit-category" title="Edit category">
                             <i class="fa fa-pen"></i>
                         </button>
                     </a>
-                    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="Delete user">
+                    <a th:href="@{'/categories/delete/' + ${category.id}}" id="buttonDeleteCategory"
+                       title="Delete category">
                         <button class="btn btn-danger rounded-circle">
                             <i class="fa fa-trash fa-beat"></i>
                         </button>
@@ -153,34 +145,34 @@
         </table>
     </div>
 </div>
-<div class="text-center mb-1" th:if="${totalItems > 0}">
-    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-</div>
-<div class="text-center mb-1" th:unless="${totalItems > 0}">
-    <span>No users found!</span>
-</div>
-<div th:if="${totalItems > 1}">
-    <nav class="pagination justify-content-center">
-        <ul class="pagination">
-            <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">
-                <a th:replace="~{/user/fragments :: column_link_paginate(1, 'First')}"></a>
-            </li>
-            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage - 1}, 'Previous')}"></a>
-            </li>
-            <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
-                th:each="i : ${#numbers.sequence(1, totalPage)}">
-                <a th:replace="~{/user/fragments :: column_link_paginate(${i}, ${i})}"></a>
-            </li>
-            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
-                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage + 1}, 'Next')}"></a>
-            </li>
-            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">
-                <a th:replace="~{/user/fragments :: column_link_paginate(${totalPage}, 'Last')}"></a>
-            </li>
-        </ul>
-    </nav>
-</div>
+<!--<div class="text-center mb-1" th:if="${totalItems > 0}">-->
+<!--    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>-->
+<!--</div>-->
+<!--<div class="text-center mb-1" th:unless="${totalItems > 0}">-->
+<!--    <span>No users found!</span>-->
+<!--</div>-->
+<!--<div th:if="${totalItems > 1}">-->
+<!--    <nav class="pagination justify-content-center">-->
+<!--        <ul class="pagination">-->
+<!--            <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">-->
+<!--                <a th:replace="~{/user/fragments :: column_link_paginate(1, 'First')}"></a>-->
+<!--            </li>-->
+<!--            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">-->
+<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage - 1}, 'Previous')}"></a>-->
+<!--            </li>-->
+<!--            <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"-->
+<!--                th:each="i : ${#numbers.sequence(1, totalPage)}">-->
+<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${i}, ${i})}"></a>-->
+<!--            </li>-->
+<!--            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">-->
+<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage + 1}, 'Next')}"></a>-->
+<!--            </li>-->
+<!--            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">-->
+<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${totalPage}, 'Last')}"></a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--</div>-->
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
@@ -195,9 +187,5 @@
 
         setTimeout(hideMessage, 2000);
     });
-
-    function clearFilter() {
-        window.location = "[[@{/users}]]";
-    }
 </script>
 </html>

@@ -91,84 +91,67 @@
     </div>
     <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
-        <form th:action="@{/users/save}" method="post" th:object="${user}" onsubmit="return checkEmailUnique(this)"
-              enctype="multipart/form-data">
+        <form th:action="@{/categories/save}" method="post" th:object="${category}" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" th:field="*{email}" required
-                       minlength="8" maxlength="128"
-                       placeholder="example@gmail.com..." name="email">
+                <label for="name" class="form-label">Category name:</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required
+                       minlength="3" maxlength="128"
+                       placeholder="Category name..." name="name">
             </div>
             <div class="mb-3">
-                <label class="form-label">Password:</label>
-                <input th:if="${user.id == null}" type="password" class="form-control" minlength="8" maxlength="20"
-                       required
-                       th:field="*{password}" placeholder="Enter password..." name="password">
-                <input th:if="${user.id != null}" type="password" class="form-control" minlength="8" maxlength="20"
-                       th:field="*{password}" placeholder="Enter password..." name="password">
-
-
+                <label for="alias" class="form-label">Alias: </label>
+                <input type="text" class="form-control" minlength="3" maxlength="45" id="alias"
+                       th:field="*{alias}" placeholder="Enter alias..." name="alias">
             </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">First name: </label>
-                <input type="text" class="form-control" minlength="2" maxlength="45" id="firstName"
-                       th:field="*{firstName}" placeholder="Enter first name..." name="firstName">
-            </div>
-
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Last name: </label>
-                <input type="text" class="form-control" minlength="2" maxlength="45" id="lastName"
-                       th:field="*{lastName}" placeholder="Enter last name..." name="lastName">
-            </div>
-            <div class="form-check mb-3">
-                <label class="form-check-label">Role: </label>
-                <div class="ml-5">
-                    <th:block th:each="role : ${listRoles}">
-                        <input class="form-check-input" type="checkbox" name="role" th:field="*{roles}"
-                               th:text="${role.name}" th:value="${role.id}">
-                        - <small>[[${role.description}]]</small>
-                        <br>
+            <div class="form-group row">
+                <label for="alias" class="form-label col-sm-4">Parent category: </label>
+                <select class="form-control" th:field="*{parent}" style="width: 35%">
+                    <option value="0">Select parent...</option>
+                    <th:block th:each="item : ${listCategories}">
+                        <option th:value="${item.id}">[[${item.name}]]</option>
                     </th:block>
-                </div>
+                </select>
             </div>
             <div class="form-check mb-3">
                 <label class="form-check-label">Enabled: </label>
                 <input class="form-check-input ml-5" type="checkbox" name="enabled" th:field="*{enabled}">
             </div>
+
             <div class="form-group row" style="margin-bottom: 5.5rem">
-                <label class="col-sm-4 col-form-label">Photos: </label>
+                <label class="col-sm-4 col-form-label">Image: </label>
                 <div class="col-sm-8">
-                    <input type="hidden" th:field="*{photos}">
-                    <input type="file" id="fileImage" style="margin-left: -6rem" name="image"
+                    <input type="hidden" th:field="*{image}">
+                    <input type="file" id="fileImage" style="margin-left: -6rem" name="fileImage"
                            accept="image/jpeg, image/png">
-                    <img id="thumbnail" style="height: 55px" alt="Image error" th:src="@{${user.photosImagePath}}">
+                    <img id="thumbnail" style="height: 55px" alt="Image error" th:src="@{/images/image_thumbnail.png}"
+                         class="img-fluid">
                 </div>
             </div>
             <div class="text-right">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-secondary">Reset</button>
-                <button type="button" class="btn btn-secondary" id="buttonCancelCreateUser">Cancel</button>
+                <button type="button" class="btn btn-secondary" id="buttonCancelCreateCategory">Cancel</button>
             </div>
         </form>
     </div>
 </div>
-<div class="modal fade text-center" id="userWarningModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modalTitle">Warning</h4>
-                <button type="button" class="btn-close" data-dismiss="modal">X</button>
-            </div>
-            <div class="modal-body">
-                <span id="modalBody"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="modal fade text-center" id="userWarningModal">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h4 class="modal-title" id="modalTitle">Warning</h4>-->
+<!--                <button type="button" class="btn-close" data-dismiss="modal">X</button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <span id="modalBody"></span>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
@@ -176,38 +159,9 @@
 <script th:src="@{/js/common_form.js}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#buttonCancelCreateUser").on('click', function () {
-            window.location = "[[@{/users}]]";
+        $("#buttonCancelCreateCategory").on('click', function () {
+            window.location = "[[@{/categories}]]";
         })
     });
-
-    let checkEmailUnique = (form) => {
-        let url = "[[@{/users/check_email}]]";
-
-        let userEmail = $("#email").val();
-        let csrfValue = $("input[name = '_csrf']").val();
-        let userId = $("#id").val();
-        let params = {id: userId, email: userEmail, _csrf: csrfValue}
-
-        $.post(url, params, function (res) {
-            if (res == "OK") {
-                form.submit();
-            } else if (res == "Duplicated") {
-                showModal("Warning", "This email existed! You can try another email!")
-            } else {
-                showModal("Error", "Unknown response from server!")
-            }
-        }).fail(function () {
-            showModal("Error", "Could not connect to server!")
-        })
-
-        return false;
-    }
-
-    function showModal(title, message) {
-        $("#modalTitle").text(title);
-        $("#modalBody").text(message);
-        $("#userWarningModal").modal();
-    }
 </script>
 </html>
