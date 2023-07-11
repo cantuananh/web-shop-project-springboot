@@ -91,7 +91,7 @@
     </div>
     <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
-        <form th:action="@{/categories/save}" method="post" th:object="${category}" enctype="multipart/form-data">
+        <form th:action="@{/categories/save}" method="post" onsubmit="return checkUnique(this)" th:object="${category}" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
                 <label for="name" class="form-label">Category name:</label>
@@ -163,5 +163,27 @@
             window.location = "[[@{/categories}]]";
         })
     });
+
+    let moduleURL = "[[@{/categories}]]";
+
+    function checkUnique(form){
+        let categoryId = $("#id").val();
+        let categoryName = $("#name").val();
+        let categoryAlias = $("#alias").val();
+
+        let csrfValue = $("input[name='_csrf']").val();
+
+        let url = "[[@{/categories/check_unique}]]";
+
+        let params = {id: categoryId, name: categoryName, alias: categoryAlias, _csrf: csrfValue};
+
+        $.post(url, params, function (response){
+            alert(response);
+        }).fail(function (){
+            alert("Failed");
+        })
+
+        return false;
+    }
 </script>
 </html>
