@@ -14,33 +14,65 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getListCategory() {
-        List<Category> rootCategories = categoryRepository.findRootCategories(Sort.by("name").ascending());
+    public List<Category> getListCategory(String sortDir) {
+        Sort sort = Sort.by("name");
 
-        return listHierarchicalCategories(rootCategories);
+        if (sortDir == null || sortDir.isEmpty()) {
+            sort = sort.ascending();
+        } else if (sortDir.equals("asc")) {
+            sort = sort.ascending();
+        } else if (sortDir.equals("desc")) {
+            sort = sort.descending();
+        }
+
+        List<Category> rootCategories = categoryRepository.findRootCategories(sort);
+
+        return listHierarchicalCategories(rootCategories, sortDir);
     }
 
-    private List<Category> listHierarchicalCategories(List<Category> rootCategories) {
+    private SortedSet<Category> sortSubCategories(Set<Category> children) {
+        return sortSubCategories(children, "asc");
+    }
+
+    private SortedSet<Category> sortSubCategories(Set<Category> children, String sortDir) {
+        SortedSet<Category> sortedChildren = new TreeSet<>(new Comparator<Category>() {
+            @Override
+            public int compare(Category category1, Category category2) {
+                if (sortDir.equals("asc")) {
+                    return category1.getName().compareTo(category2.getName());
+                } else {
+                    return category2.getName().compareTo(category1.getName());
+                }
+
+            }
+        });
+
+        sortedChildren.addAll(children);
+
+        return sortedChildren;
+    }
+
+    private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
         List<Category> hierarchicalCategories = new ArrayList<>();
 
         for (Category rootCategory : rootCategories) {
             hierarchicalCategories.add(Category.copyFull(rootCategory));
 
-            Set<Category> children = sortSubCategories(rootCategory.getChildren());
+            Set<Category> children = sortSubCategories(rootCategory.getChildren(), sortDir);
             for (Category subCategory : children) {
                 String name = "--" + subCategory.getName();
 
                 hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-                listSubHierarchicalCategories(hierarchicalCategories, subCategory, 1);
+                listSubHierarchicalCategories(hierarchicalCategories, subCategory, 1, sortDir);
             }
         }
 
         return hierarchicalCategories;
     }
 
-    private void listSubHierarchicalCategories(List<Category> hierarchicalCategories, Category parent, int subLevel) {
-        Set<Category> children = sortSubCategories(parent.getChildren());
+    private void listSubHierarchicalCategories(List<Category> hierarchicalCategories, Category parent, int subLevel, String sortDir) {
+        Set<Category> children = sortSubCategories(parent.getChildren(), sortDir);
         int newSubLevel = subLevel + 1;
         for (Category subCategory : children) {
             String name = "";
@@ -51,7 +83,7 @@ public class CategoryService {
 
             hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-            listSubHierarchicalCategories(hierarchicalCategories, subCategory, newSubLevel);
+            listSubHierarchicalCategories(hierarchicalCategories, subCategory, newSubLevel, sortDir);
         }
 
     }
@@ -129,18 +161,5 @@ public class CategoryService {
         }
 
         return "OK";
-    }
-
-    private SortedSet<Category> sortSubCategories(Set<Category> children) {
-        SortedSet<Category> sortedChildren = new TreeSet<>(new Comparator<Category>() {
-            @Override
-            public int compare(Category category1, Category category2) {
-                return category1.getName().compareTo(category2.getName());
-            }
-        });
-
-        sortedChildren.addAll(children);
-
-        return sortedChildren;
     }
 }

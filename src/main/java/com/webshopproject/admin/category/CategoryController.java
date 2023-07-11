@@ -3,6 +3,7 @@ package com.webshopproject.admin.category;
 import com.webshopproject.admin.FileUploadUtil;
 import com.webshopproject.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -22,9 +23,18 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String getListCategory(Model model) {
-        List<Category> listCategory = categoryService.getListCategory();
+    public String getListCategory(@Param("sortDir") String sortDir, Model model) {
+        if (sortDir == null || sortDir.isEmpty()){
+            sortDir = "asc";
+        }
+
+        List<Category> listCategory = categoryService.getListCategory(sortDir);
+
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
         model.addAttribute("listCategory", listCategory);
+        model.addAttribute("reverseSortDir", reverseSortDir);
+
         return "category/index";
     }
 
