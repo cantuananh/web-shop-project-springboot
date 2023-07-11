@@ -153,22 +153,7 @@
         </form>
     </div>
 </div>
-<div class="modal fade text-center" id="userWarningModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modalTitle">Warning</h4>
-                <button type="button" class="btn-close" data-dismiss="modal">X</button>
-            </div>
-            <div class="modal-body">
-                <span id="modalBody"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="~{/model_fragment :: modal_dialog}"></div>
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
@@ -193,21 +178,15 @@
             if (res == "OK") {
                 form.submit();
             } else if (res == "Duplicated") {
-                showModal("Warning", "This email existed! You can try another email!")
+                showModalDialog("Warning", "This email " + userEmail + " existed! You can try another email!")
             } else {
-                showModal("Error", "Unknown response from server!")
+                showErrorModal("Unknown response from server!")
             }
         }).fail(function () {
-            showModal("Error", "Could not connect to server!")
+            showErrorModal("Could not connect to server!")
         })
 
         return false;
-    }
-
-    function showModal(title, message) {
-        $("#modalTitle").text(title);
-        $("#modalBody").text(message);
-        $("#userWarningModal").modal();
     }
 </script>
 </html>
