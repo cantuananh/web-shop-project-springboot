@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String getListCategory(@Param("sortDir") String sortDir, Model model) {
-        if (sortDir == null || sortDir.isEmpty()){
+        if (sortDir == null || sortDir.isEmpty()) {
             sortDir = "asc";
         }
 
@@ -82,5 +82,15 @@ public class CategoryController {
         }
 
         return "category/create";
+    }
+
+    @GetMapping("/categories/{id}/enabled/{status}")
+    public String updateEnabledStatusCategory(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        categoryService.updateEnabledStatusCategory(id, enabled);
+        String status = enabled ? "enabled" : "disabled";
+        String message = "The category ID " + id + " has been " + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/categories";
     }
 }

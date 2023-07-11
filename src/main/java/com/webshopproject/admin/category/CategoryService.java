@@ -162,4 +162,8 @@ public class CategoryService {
 
         return "OK";
     }
+
+    public void updateEnabledStatusCategory(Integer id, boolean enabled) {
+        categoryRepository.updateEnabledStatusCategory(id, enabled);
+    }
 }

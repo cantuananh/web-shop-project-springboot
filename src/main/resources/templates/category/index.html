@@ -42,6 +42,7 @@
             <th>Category image</th>
             <th>
                 <a class="text-white" th:href="@{'/categories?sortDir=' + ${reverseSortDir}}">Category name</a>
+                <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
             </th>
             <th>Alias</th>
             <th>Enabled</th>
@@ -56,11 +57,9 @@
                 <td class="text-left">[[${category.name}]]</td>
                 <td>[[${category.alias}]]</td>
                 <td>
-                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/false'}"
-                       th:if="${category.enabled == true}"
+                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/false'}" th:if="${category.enabled == true}"
                        class="fas fa-check-circle icon-green fa-2x" title="Disable this category"></a>
-                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/true'}"
-                       th:if="${category.enabled == false}"
+                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" th:if="${category.enabled == false}"
                        class="fas fa-check-circle icon-dark fa-2x" title="Enabled this category"></a>
                 </td>
                 <td class="action">
