@@ -91,7 +91,8 @@
     </div>
     <h1 class="text-center">[[${pageTitle}]]</h1>
     <div>
-        <form th:action="@{/categories/save}" method="post" th:object="${category}" enctype="multipart/form-data">
+        <form th:action="@{/categories/save}" method="post" onsubmit="return checkUnique(this)" th:object="${category}"
+              enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}">
             <div class="mb-3 mt-3">
                 <label for="name" class="form-label">Category name:</label>
@@ -123,8 +124,8 @@
                 <div class="col-sm-8">
                     <input type="hidden" th:field="*{image}">
                     <input type="file" id="fileImage" style="margin-left: -6rem" name="fileImage"
-                           accept="image/jpeg, image/png">
-                    <img id="thumbnail" style="height: 55px" alt="Image error" th:src="@{/images/image_thumbnail.png}"
+                           accept="image/jpeg, image/png" th:required="${category.imagePath== null}">
+                    <img id="thumbnail" style="height: 55px" alt="Image error" th:src="@{${category.imagePath}}"
                          class="img-fluid">
                 </div>
             </div>
@@ -136,22 +137,7 @@
         </form>
     </div>
 </div>
-<!--<div class="modal fade text-center" id="userWarningModal">-->
-<!--    <div class="modal-dialog">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h4 class="modal-title" id="modalTitle">Warning</h4>-->
-<!--                <button type="button" class="btn-close" data-dismiss="modal">X</button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <span id="modalBody"></span>-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+<div th:replace="~{/modal_fragment :: modal_dialog}"></div>
 <div class="footer">
     <p>Shopme control panel- Copyright &copy; Shopme</p>
 </div>
@@ -163,5 +149,36 @@
             window.location = "[[@{/categories}]]";
         })
     });
+
+    let moduleURL = "[[@{/categories}]]";
+
+    function checkUnique(form) {
+        let categoryId = $("#id").val();
+        let categoryName = $("#name").val();
+        let categoryAlias = $("#alias").val();
+
+        let csrfValue = $("input[name='_csrf']").val();
+
+        let url = "[[@{/categories/check_unique}]]";
+
+        let params = {id: categoryId, name: categoryName, alias: categoryAlias, _csrf: csrfValue};
+
+        $.post(url, params, function (response) {
+            if (response === "OK") {
+                form.submit();
+            } else if (response === "Duplicate category name!") {
+                showWarningModal("There is another category having same name " + categoryName)
+
+            } else if (response === "Duplicate alias!") {
+                showWarningModal("There is another category having same alias " + categoryAlias)
+            } else {
+                showErrorModal("Unknown response from server!")
+            }
+        }).fail(function () {
+            showErrorModal("Could not connect to server!")
+        })
+
+        return false;
+    }
 </script>
 </html>

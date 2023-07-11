@@ -2,12 +2,14 @@ package com.webshopproject.admin;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.logging.Logger;
 
 public class FileUploadUtil {
     public static void saveFile(String uploadDirectory, String fileName, MultipartFile multipartFile) throws IOException {
@@ -42,6 +44,16 @@ public class FileUploadUtil {
             });
         } catch (IOException e) {
             System.out.println("Could not list directory: " + directoryPath);
+        }
+    }
+
+    public static void removeDir(String dir) {
+        cleanDirectory(dir);
+
+        try {
+            Files.delete(Paths.get(dir));
+        } catch (IOException e){
+            e.printStackTrace();
         }
 
     }

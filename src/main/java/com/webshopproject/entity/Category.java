@@ -35,6 +35,7 @@ public class Category {
         copyCategory.setImage(category.getImage());
         copyCategory.setAlias(category.getAlias());
         copyCategory.setEnabled(category.isEnabled());
+        copyCategory.setHasChildren(category.getChildren().size() > 0);
 
         return copyCategory;
     }
@@ -104,8 +105,21 @@ public class Category {
 
     @Transient
     public String getImagePath() {
+        if (this.id == null) return "/images/images-thumbnail.png";
+
         return "/category-images/" + this.id + "/" + this.image;
     }
+
+    public boolean isHasChildren() {
+        return hasChildren;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    @Transient
+    private boolean hasChildren;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -117,6 +131,12 @@ public class Category {
     @Column(length = 128, nullable = false)
     private String image;
     private boolean enabled;
+
+    public Category(Integer id, String name, String alias) {
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
+    }
 
     public Category(String name) {
         this.name = name;
