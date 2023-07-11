@@ -3,12 +3,10 @@ package com.webshopproject.admin.category;
 import com.webshopproject.entity.Category;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -16,37 +14,67 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getListCategory() {
-        List<Category> rootCategories = categoryRepository.findRootCategories();
+    public List<Category> getListCategory(String sortDir) {
+        Sort sort = Sort.by("name");
 
-        return listHierarchicalCategories(rootCategories);
+        if (sortDir == null || sortDir.isEmpty()) {
+            sort = sort.ascending();
+        } else if (sortDir.equals("asc")) {
+            sort = sort.ascending();
+        } else if (sortDir.equals("desc")) {
+            sort = sort.descending();
+        }
+
+        List<Category> rootCategories = categoryRepository.findRootCategories(sort);
+
+        return listHierarchicalCategories(rootCategories, sortDir);
     }
 
-    private List<Category> listHierarchicalCategories(List<Category> rootCategories) {
+    private SortedSet<Category> sortSubCategories(Set<Category> children) {
+        return sortSubCategories(children, "asc");
+    }
+
+    private SortedSet<Category> sortSubCategories(Set<Category> children, String sortDir) {
+        SortedSet<Category> sortedChildren = new TreeSet<>(new Comparator<Category>() {
+            @Override
+            public int compare(Category category1, Category category2) {
+                if (sortDir.equals("asc")) {
+                    return category1.getName().compareTo(category2.getName());
+                } else {
+                    return category2.getName().compareTo(category1.getName());
+                }
+
+            }
+        });
+
+        sortedChildren.addAll(children);
+
+        return sortedChildren;
+    }
+
+    private List<Category> listHierarchicalCategories(List<Category> rootCategories, String sortDir) {
         List<Category> hierarchicalCategories = new ArrayList<>();
 
-        for (Category rootCategory: rootCategories){
+        for (Category rootCategory : rootCategories) {
             hierarchicalCategories.add(Category.copyFull(rootCategory));
 
-            Set<Category> children = rootCategory.getChildren();
-            for (Category subCategory: children
-                 ) {
+            Set<Category> children = sortSubCategories(rootCategory.getChildren(), sortDir);
+            for (Category subCategory : children) {
                 String name = "--" + subCategory.getName();
 
                 hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-                listSubHierarchicalCategories(hierarchicalCategories, subCategory, 1);
+                listSubHierarchicalCategories(hierarchicalCategories, subCategory, 1, sortDir);
             }
         }
 
         return hierarchicalCategories;
     }
 
-    private void listSubHierarchicalCategories(List<Category> hierarchicalCategories, Category parent, int subLevel) {
-        Set<Category> children = parent.getChildren();
+    private void listSubHierarchicalCategories(List<Category> hierarchicalCategories, Category parent, int subLevel, String sortDir) {
+        Set<Category> children = sortSubCategories(parent.getChildren(), sortDir);
         int newSubLevel = subLevel + 1;
-        for (Category subCategory: children
-             ) {
+        for (Category subCategory : children) {
             String name = "";
             for (int i = 0; i < newSubLevel; i++) {
                 name += "--";
@@ -55,7 +83,7 @@ public class CategoryService {
 
             hierarchicalCategories.add(Category.copyFull(subCategory, name));
 
-            listSubHierarchicalCategories(hierarchicalCategories, subCategory, newSubLevel);
+            listSubHierarchicalCategories(hierarchicalCategories, subCategory, newSubLevel, sortDir);
         }
 
     }
@@ -66,13 +94,13 @@ public class CategoryService {
 
     public List<Category> getListCategoriesUsedInForm() {
         List<Category> categoriesUsedInForm = new ArrayList<>();
-        Iterable<Category> categoriesInDB = categoryRepository.findAll();
+        Iterable<Category> categoriesInDB = categoryRepository.findRootCategories(Sort.by("name").ascending());
 
         for (Category category : categoriesInDB) {
             if (category.getParent() == null) {
                 categoriesUsedInForm.add(Category.copyIdAndName(category));
 
-                Set<Category> children = category.getChildren();
+                Set<Category> children = sortSubCategories(category.getChildren());
 
                 for (Category subCategory : children) {
                     String name = "--" + subCategory.getName();
@@ -87,7 +115,7 @@ public class CategoryService {
 
     public void listSubCategoriesUsedInForm(List<Category> categoriesUsedInForm, Category parent, int subLevel) {
         int newSubLevel = subLevel + 1;
-        Set<Category> children = parent.getChildren();
+        Set<Category> children = sortSubCategories(parent.getChildren());
         for (Category subCategory : children) {
             String name = "";
             for (int i = 0; i < newSubLevel; i++) {
@@ -102,7 +130,7 @@ public class CategoryService {
     public Category getCategoryWithId(Integer id) throws CategoryNotFoundException {
         try {
             return categoryRepository.findById(id).get();
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
     }
@@ -133,5 +161,9 @@ public class CategoryService {
         }
 
         return "OK";
+    }
+
+    public void updateEnabledStatusCategory(Integer id, boolean enabled) {
+        categoryRepository.updateEnabledStatusCategory(id, enabled);
     }
 }
