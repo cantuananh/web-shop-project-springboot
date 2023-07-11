@@ -120,6 +120,12 @@ public class Category {
     private String image;
     private boolean enabled;
 
+    public Category(Integer id, String name, String alias) {
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
+    }
+
     public Category(String name) {
         this.name = name;
         this.alias = name;

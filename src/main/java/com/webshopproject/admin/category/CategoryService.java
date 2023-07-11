@@ -106,4 +106,32 @@ public class CategoryService {
             throw new CategoryNotFoundException("Could not find any category with ID " + id);
         }
     }
+
+    public String checkUnique(Integer id, String name, String alias) {
+        boolean isCreatingNew = (id == null || id == 0);
+
+        Category categoryByName = categoryRepository.findByName(name);
+
+        if (isCreatingNew) {
+            if (categoryByName != null) {
+                return "Duplicate category name!";
+            } else {
+                Category categoryByAlias = categoryRepository.findByAlias(alias);
+                if (categoryByAlias != null) {
+                    return "Duplicate alias!";
+                }
+            }
+        } else {
+            if (categoryByName != null && categoryByName.getId() != null) {
+                return "Duplicate category name!";
+            }
+
+            Category categoryByAlias = categoryRepository.findByAlias(alias);
+            if (categoryByAlias != null && categoryByAlias.getId() != null) {
+                return "Duplicate alias!";
+            }
+        }
+
+        return "OK";
+    }
 }

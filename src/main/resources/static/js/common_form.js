@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#fileImage").change(function () {
-        let fileSize =  this.files[0].size;
+        let fileSize = this.files[0].size;
 
         if (fileSize > 1048576) {
             this.setCustomValidity("File size less than 1Mb");
@@ -19,4 +19,18 @@ let showImageThumbnail = (fileInput) => {
         $("#thumbnail").attr("src", e.target.result);
     }
     reader.readAsDataURL(file);
+}
+
+function showErrorModal(message) {
+    showModalDialog("Error", message);
+}
+
+function showWarningModal(message) {
+    showModalDialog("Warning", message);
+}
+
+function showModalDialog(title, message) {
+    $("#modalTitle").text(title);
+    $("#modalBody").text(message);
+    $("#modalDialog").modal();
 }
