@@ -56,30 +56,15 @@
                 </td>
                 <td class="text-left">[[${category.name}]]</td>
                 <td>[[${category.alias}]]</td>
-                <td>
-                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/false'}" th:if="${category.enabled == true}"
-                       class="fas fa-check-circle icon-green fa-2x" title="Disable this category"></a>
-                    <a th:href="@{'/categories/' + ${category.id} + '/enabled/true'}" th:if="${category.enabled == false}"
-                       class="fas fa-check-circle icon-dark fa-2x" title="Enabled this category"></a>
-                </td>
-                <td class="action">
-                    <a th:href="@{'/categories/edit/' + ${category.id}}">
-                        <button class="btn btn-info rounded-circle btn-edit-category" title="Edit category">
-                            <i class="fa fa-pen"></i>
-                        </button>
-                    </a>
-                    <a th:href="@{'/categories/delete/' + ${category.id}}" id="buttonDeleteCategory"
-                       title="Delete category">
-                        <button class="btn btn-danger rounded-circle">
-                            <i class="fa fa-trash fa-beat"></i>
-                        </button>
-                    </a>
-                </td>
+                <td th:replace="~{/category/category_fragments :: update_status_fragment}"></td>
+                <td th:replace="~{/category/category_fragments :: action_fragment}"></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<div th:replace="~{/modal_fragment :: confirm_modal}"></div>
 <!--<div class="text-center mb-1" th:if="${totalItems > 0}">-->
 <!--    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>-->
 <!--</div>-->
@@ -110,7 +95,9 @@
 <!--</div>-->
 <div th:replace="~{/layout_fragments :: footer}"></div>
 </body>
+<script th:src="@{/js/common_list.js}"></script>
 <script type="text/javascript">
+    let moduleURL = "[[@{'/categories'}]]";
     $(document).ready(function () {
         var message = $(".message");
 
@@ -120,5 +107,12 @@
 
         setTimeout(hideMessage, 2000);
     });
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this), "category")
+        })
+    })
 </script>
 </html>

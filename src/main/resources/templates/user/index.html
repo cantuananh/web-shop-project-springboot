@@ -63,24 +63,8 @@
                         <span>[[${role.name}]]</span>
                     </p>
                 </td>
-                <td>
-                    <a th:href="@{'/users/' + ${user.id} + '/enabled/false'}" th:if="${user.enabled == true}"
-                       class="fas fa-check-circle icon-green fa-2x" title="Disable this user"></a>
-                    <a th:href="@{'/users/' + ${user.id} + '/enabled/true'}" th:if="${user.enabled == false}"
-                       class="fas fa-check-circle icon-dark fa-2x" title="Enabled this user"></a>
-                </td>
-                <td class="action">
-                    <a th:href="@{'/users/edit/' + ${user.id}}">
-                        <button class="btn btn-info rounded-circle btn-edit-user" title="Edit user">
-                            <i class="fa fa-pen"></i>
-                        </button>
-                    </a>
-                    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="Delete user">
-                        <button class="btn btn-danger rounded-circle">
-                            <i class="fa fa-trash fa-beat"></i>
-                        </button>
-                    </a>
-                </td>
+                <td th:replace="~{/user/fragments :: update_enabled_user}"></td>
+                <td th:replace="~{/user/fragments :: delete_user}"></td>
             </tr>
             </tbody>
         </table>
@@ -114,10 +98,15 @@
         </ul>
     </nav>
 </div>
-<div th:replace="~{/model_fragment :: modal_dialog}"></div>
+<div th:replace="~{/modal_fragment :: confirm_modal}"></div>
 <div th:replace="~{/layout_fragments :: footer}"></div>
 </body>
+
+<script th:src="@{/js/common_list.js}"></script>
+
 <script type="text/javascript">
+    let moduleURL = "[[@{/users}]]";
+
     $(document).ready(function () {
         var message = $(".message");
 
@@ -128,8 +117,11 @@
         setTimeout(hideMessage, 2000);
     });
 
-    function clearFilter() {
-        window.location = "[[@{/users}]]";
-    }
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this), 'user')
+        })
+    })
 </script>
 </html>

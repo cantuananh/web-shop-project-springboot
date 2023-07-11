@@ -13,7 +13,10 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     public List<Category> findRootCategories(Sort sort);
 
     public Category findByName(String name);
+
     public Category findByAlias(String alias);
+
+    public Long countById(Integer id);
 
     @Query("update Category category set category.enabled = ?2 where category.id = ?1")
     @Modifying
