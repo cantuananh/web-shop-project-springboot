@@ -84,9 +84,9 @@ public class UserService {
         userRepository.updateEnabledStatus(id, enabled);
     }
 
-    public Page<User> listByPage(int pageNumber, String sortField, String sortDirectory, String keyword) {
+    public Page<User> listByPage(int pageNumber, String sortField, String sortDir, String keyword) {
         Sort sort = Sort.by(sortField);
-        sort = sortDirectory.equals("asc") ? sort.ascending() : sort.descending();
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNumber - 1, USER_PER_PAGE, sort);
 
         if (keyword != null) {

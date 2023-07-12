@@ -3,6 +3,9 @@ package com.webshopproject.admin.category;
 import com.webshopproject.entity.Category;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +14,12 @@ import java.util.*;
 @Service
 @Transactional
 public class CategoryService {
+    private static  final int ROOT_CATEGORIES_PER_PAGE = 4;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getListCategory(String sortDir) {
+    public List<Category> listByPage(CategoryPageInfo categoryPageInfo, int pageNumber, String sortDir) {
         Sort sort = Sort.by("name");
 
         if (sortDir == null || sortDir.isEmpty()) {
@@ -25,10 +30,32 @@ public class CategoryService {
             sort = sort.descending();
         }
 
-        List<Category> rootCategories = categoryRepository.findRootCategories(sort);
+        Pageable pageable = PageRequest.of(pageNumber - 1, ROOT_CATEGORIES_PER_PAGE, sort);
+
+        Page<Category> pageCategories = categoryRepository.findRootCategories(pageable);
+        List<Category> rootCategories = pageCategories.getContent();
+
+        categoryPageInfo.setTotalElement(pageCategories.getTotalElements());
+        categoryPageInfo.setTotalPages(pageCategories.getTotalPages());
 
         return listHierarchicalCategories(rootCategories, sortDir);
     }
+
+//    public List<Category> getListCategory(String sortDir) {
+//        Sort sort = Sort.by("name");
+//
+//        if (sortDir == null || sortDir.isEmpty()) {
+//            sort = sort.ascending();
+//        } else if (sortDir.equals("asc")) {
+//            sort = sort.ascending();
+//        } else if (sortDir.equals("desc")) {
+//            sort = sort.descending();
+//        }
+//
+//        List<Category> rootCategories = categoryRepository.findRootCategories(sort);
+//
+//        return listHierarchicalCategories(rootCategories, sortDir);
+//    }
 
     private SortedSet<Category> sortSubCategories(Set<Category> children) {
         return sortSubCategories(children, "asc");
