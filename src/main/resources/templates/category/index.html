@@ -41,7 +41,8 @@
             <th>ID</th>
             <th>Category image</th>
             <th>
-                <a class="text-white" th:href="@{'/categories?sortDir=' + ${reverseSortDir}}">Category name</a>
+                <a class="text-white"
+                   th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir}}">Category name</a>
                 <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
             </th>
             <th>Alias</th>
@@ -64,40 +65,18 @@
     </div>
 </div>
 
-<div th:replace="~{/modal_fragment :: confirm_modal}"></div>
-<!--<div class="text-center mb-1" th:if="${totalItems > 0}">-->
-<!--    <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>-->
-<!--</div>-->
-<!--<div class="text-center mb-1" th:unless="${totalItems > 0}">-->
-<!--    <span>No users found!</span>-->
-<!--</div>-->
-<!--<div th:if="${totalItems > 1}">-->
-<!--    <nav class="pagination justify-content-center">-->
-<!--        <ul class="pagination">-->
-<!--            <li th:class="${currentPage == 1 ? 'page-item disabled' : 'page-item'}">-->
-<!--                <a th:replace="~{/user/fragments :: column_link_paginate(1, 'First')}"></a>-->
-<!--            </li>-->
-<!--            <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">-->
-<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage - 1}, 'Previous')}"></a>-->
-<!--            </li>-->
-<!--            <li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"-->
-<!--                th:each="i : ${#numbers.sequence(1, totalPage)}">-->
-<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${i}, ${i})}"></a>-->
-<!--            </li>-->
-<!--            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">-->
-<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${currentPage + 1}, 'Next')}"></a>-->
-<!--            </li>-->
-<!--            <li th:class="${currentPage < totalPage ? 'page-item' : 'page-item disabled'}">-->
-<!--                <a th:replace="~{/user/fragments :: column_link_paginate(${totalPage}, 'Last')}"></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</div>-->
+<div th:replace="~{/fragments :: pagination('/categories', 'top-level categories')}"></div>
+
+<div th:replace="~{/fragments :: confirm_modal}"></div>
+
 <div th:replace="~{/layout_fragments :: footer}"></div>
 </body>
+
 <script th:src="@{/js/common_list.js}"></script>
+
 <script type="text/javascript">
-    let moduleURL = "[[@{'/categories'}]]";
+    let moduleURL = "[[@{/categories}]]";
+
     $(document).ready(function () {
         var message = $(".message");
 
