@@ -23,43 +23,15 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String listFirstPage(@Param("sortDir") String sortDir, Model model) {
-        return listByPage(1, sortDir, model);
-    }
-
-//    @GetMapping("/categories")
-//    public String getListCategory(@Param("sortDir") String sortDir, Model model) {
-//        if (sortDir == null || sortDir.isEmpty()) {
-//            sortDir = "asc";
-//        }
-//
-//        List<Category> listCategory = categoryService.getListCategory(sortDir);
-//
-//        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
-//
-//        model.addAttribute("listCategory", listCategory);
-//        model.addAttribute("reverseSortDir", reverseSortDir);
-//
-//        return "category/index";
-//    }
-
-    @GetMapping("/categories/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, @Param("sortDir") String sortDir, Model model) {
+    public String getListCategory(@Param("sortDir") String sortDir, Model model) {
         if (sortDir == null || sortDir.isEmpty()) {
             sortDir = "asc";
         }
 
-        CategoryPageInfo categoryPageInfo = new CategoryPageInfo();
-
-        List<Category> listCategory = categoryService.listByPage(categoryPageInfo, pageNum, sortDir);
+        List<Category> listCategory = categoryService.getListCategory(sortDir);
 
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
 
-        model.addAttribute("totalPage", categoryPageInfo.getTotalPages());
-        model.addAttribute("totalItems", categoryPageInfo.getTotalElement());
-        model.addAttribute("currentPage", pageNum);
-        model.addAttribute("sortField", "name");
-        model.addAttribute("sortDir", sortDir);
         model.addAttribute("listCategory", listCategory);
         model.addAttribute("reverseSortDir", reverseSortDir);
 

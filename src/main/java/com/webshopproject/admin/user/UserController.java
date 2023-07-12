@@ -31,11 +31,11 @@ public class UserController {
             @PathVariable(name = "pageNumber") int pageNumber,
             Model model,
             @Param("sortField") String sortField,
-            @Param("sortDir") String sortDir,
+            @Param("sortDirectory") String sortDirectory,
             @Param("keyword") String keyword) {
         System.out.println("Sort Field: " + sortField);
-        System.out.println("Sort dir: " + sortDir);
-        Page<User> page = userService.listByPage(pageNumber, sortField, sortDir, keyword);
+        System.out.println("Sort directory: " + sortDirectory);
+        Page<User> page = userService.listByPage(pageNumber, sortField, sortDirectory, keyword);
         List<User> listUsers = page.getContent();
         long startCount = (pageNumber - 1) * UserService.USER_PER_PAGE + 1;
         long endCount = startCount * UserService.USER_PER_PAGE;
@@ -46,7 +46,7 @@ public class UserController {
             endCount = page.getTotalElements();
         }
 
-        String revertSortDir = sortDir.equals("asc") ? "desc" : "asc";
+        String revertSortDir = sortDirectory.equals("asc") ? "desc" : "asc";
 
         model.addAttribute("startCount", startCount);
         model.addAttribute("totalPage", page.getTotalPages());
@@ -55,7 +55,7 @@ public class UserController {
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listUsers", listUsers);
         model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("sortDirectory", sortDirectory);
         model.addAttribute("revertSortDir", revertSortDir);
         model.addAttribute("keyword", keyword);
 
@@ -97,7 +97,7 @@ public class UserController {
     private static String getRedirectURLtoAffectedUser(User user) {
         String firstPartOfEmail = user.getEmail().split("@")[0];
 
-        return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
+        return "redirect:/users/page/1?sortField=id&sortDirectory=asc&keyword=" + firstPartOfEmail;
     }
 
     @GetMapping("/users/edit/{id}")

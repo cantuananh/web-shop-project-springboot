@@ -7,14 +7,19 @@
 <body>
 <th th:fragment="column_link(fieldName, columnLabel)">
     <a class="text-white" th:if="${sortField != fieldName}"
-       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : revertSortDir}
+       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} +'&sortDirectory=' + ${sortField != fieldName ? sortDirectory : revertSortDir}
         + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${columnLabel}]]</a>
     <a class="text-white" th:if="${sortField == fieldName}"
-       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} +'&sortDir=' + ${sortField != fieldName ? sortDir : revertSortDir}
+       th:href="@{'/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} +'&sortDirectory=' + ${sortField != fieldName ? sortDirectory : revertSortDir}
         + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${columnLabel}]]</a>
     <span th:if="${sortField == fieldName}"
-          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+          th:class="${sortDirectory == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 </th>
+
+<a th:fragment="column_link_paginate(pageNumber, label)"
+   class="page-link"
+   th:href="@{'/users/page/' + ${pageNumber} + '?sortField=' + ${sortField} + '&sortDirectory=' + ${sortDirectory} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+
 
 <td th:fragment="update_enabled_user">
     <a th:href="@{'/users/' + ${user.id} + '/enabled/false'}" th:if="${user.enabled == true}"
@@ -30,8 +35,7 @@
             <i class="fa fa-pen"></i>
         </button>
     </a>
-    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="Delete user" th:entityId="${user.id}"
-       class="link-delete">
+    <a th:href="@{'/users/delete/' + ${user.id}}" id="buttonDeleteUser" title="Delete user" th:entityId="${user.id}" class="link-delete">
         <button class="btn btn-danger rounded-circle">
             <i class="fa fa-trash fa-beat"></i>
         </button>
