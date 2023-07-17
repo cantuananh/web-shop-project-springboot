@@ -25,16 +25,9 @@
     <div th:if="${message != null}" class="alert-success alert text-center message">
         [[${message}]]
     </div>
-    <div class="justify-content-center d-flex">
-        <form th:action="@{/users/page/1}" class="form-inline">
-            <input type="hidden" name="sortField" th:value="${sortField}">
-            <input type="hidden" name="sortDir" th:value="${sortDir}">
-            Filter: <input type="search" name="keyword" th:value="${keyword}" required class="form-control m-3"
-                           placeholder="Enter name search..." style="width: 15rem">
-            <input type="submit" value="Search" class="btn btn-primary mr-3">
-            <input type="reset" value="Clear" class="btn btn-secondary" onclick="clearFilter();">
-        </form>
-    </div>
+
+    <div th:replace="~{fragments :: search_form('/users/page/1')}"></div>
+
     <div>
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">

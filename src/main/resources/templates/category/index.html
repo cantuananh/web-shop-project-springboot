@@ -25,16 +25,9 @@
     <div th:if="${message != null}" class="alert-success alert text-center message">
         [[${message}]]
     </div>
-    <!--    <div class="justify-content-center d-flex">-->
-    <!--        <form th:action="@{/users/page/1}" class="form-inline">-->
-    <!--            <input type="hidden" name="sortField" th:value="${sortField}">-->
-    <!--            <input type="hidden" name="sortDirectory" th:value="${sortDirectory}">-->
-    <!--            Filter: <input type="search" name="keyword" th:value="${keyword}" required class="form-control m-3"-->
-    <!--                           placeholder="Enter name search..." style="width: 15rem">-->
-    <!--            <input type="submit" value="Search" class="btn btn-primary mr-3">-->
-    <!--            <input type="reset" value="Clear" class="btn btn-secondary" onclick="clearFilter();">-->
-    <!--        </form>-->
-    <!--    </div>-->
+
+    <div th:replace="~{fragments :: search_form('/categories/page/1')}"></div>
+
     <div>
         <table class="table table-responsive-lg table-hover table-bordered table-striped">
             <thead class="thead-dark text-center">
@@ -42,7 +35,8 @@
             <th>Category image</th>
             <th>
                 <a class="text-white"
-                   th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir}}">Category name</a>
+                   th:href="@{'/categories/page/' + ${currentPage} + '?sortDir=' + ${reverseSortDir} +${keyword != null ? '&keyword=' + keyword : ''}}">Category
+                    name</a>
                 <span th:class="${reverseSortDir == 'desc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
             </th>
             <th>Alias</th>
@@ -65,7 +59,16 @@
     </div>
 </div>
 
-<div th:replace="~{/fragments :: pagination('/categories', 'top-level categories')}"></div>
+
+<div th:if="${keyword != null}" class="text-center">
+    <span>Search result does not show categories in hierarchical form</span>
+    <div th:replace="~{fragments :: pagination('/categories', 'categories')}"></div>
+</div>
+
+<div th:unless="${keyword != null}" class="text-center">
+    <div th:replace="~{/fragments :: pagination('/categories', 'top-level categories')}"></div>
+</div>
+
 
 <div th:replace="~{/fragments :: confirm_modal}"></div>
 

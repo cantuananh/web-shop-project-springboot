@@ -1,6 +1,7 @@
 package com.webshopproject.admin.category;
 
 import com.webshopproject.admin.FileUploadUtil;
+import com.webshopproject.admin.user.UserService;
 import com.webshopproject.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listFirstPage(@Param("sortDir") String sortDir, Model model) {
-        return listByPage(1, sortDir, model);
+        return listByPage(1, sortDir, null, model);
     }
 
 //    @GetMapping("/categories")
@@ -44,14 +45,14 @@ public class CategoryController {
 //    }
 
     @GetMapping("/categories/page/{pageNum}")
-    public String listByPage(@PathVariable(name = "pageNum") int pageNum, @Param("sortDir") String sortDir, Model model) {
+    public String listByPage(@PathVariable(name = "pageNum") int pageNum, @Param("sortDir") String sortDir, @Param("keyword") String keyword, Model model) {
         if (sortDir == null || sortDir.isEmpty()) {
             sortDir = "asc";
         }
 
         CategoryPageInfo categoryPageInfo = new CategoryPageInfo();
 
-        List<Category> listCategory = categoryService.listByPage(categoryPageInfo, pageNum, sortDir);
+        List<Category> listCategory = categoryService.listByPage(categoryPageInfo, pageNum, sortDir, keyword);
 
         String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
 
@@ -60,6 +61,7 @@ public class CategoryController {
         model.addAttribute("currentPage", pageNum);
         model.addAttribute("sortField", "name");
         model.addAttribute("sortDir", sortDir);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("listCategory", listCategory);
         model.addAttribute("reverseSortDir", reverseSortDir);
 
